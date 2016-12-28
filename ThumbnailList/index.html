@@ -1,0 +1,84 @@
+<head>
+  <link rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+  <link rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+    integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+    crossorigin="anonymous">
+  <!-- Enable this after including jQuery.
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+  -->
+  <script src="https://fb.me/react-0.14.3.js"></script>
+  <script src="https://fb.me/react-dom-0.14.3.js"></script>
+  <script src="https://fb.me/JSXTransformer-0.12.2.js"></script>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class=" row target">
+    </div>
+  </div>
+</body>
+<script type="text/jsx">
+  var Badge = React.createClass({
+    render: function() {
+      return <button className="btn btn-primary" type="button">
+        {this.props.title} <span className="badge">{this.props.number}</span>
+      </button>
+    }
+  });
+
+  var Thumbnail = React.createClass({
+    render: function() {
+      return <div className="col-sm-5 col-md-4">
+         <div className="thumbnail">
+          <img src={this.props.imageUrl} alt="logo" />
+            <div className="caption">
+              <h3>{this.props.heading}</h3>
+              <p>{this.props.description}</p>
+              <p>
+                <Badge title={this.props.title} number={this.props.number} />
+              </p>
+            </div>
+        </div>
+      </div>
+    }
+  });
+
+  var ThumbnailList = React.createClass({
+    render: function() {
+      var list = this.props.thumbnailPropsData.map(function(thumbnailProps){
+        return <Thumbnail {...thumbnailProps} />
+      });
+
+      return <div>
+          {list}
+      </div>
+    }
+  });
+
+  var options = {
+    thumbnailPropsData: [
+      {
+        imageUrl: 'http://formatjs.io/img/react.svg',
+        heading: 'Learn you React for greater good!',
+        description: 'Learn ReactJS with Flux. It is amazing technology.',
+        title: 'Tutorial',
+        number: 78,
+      },
+      {
+        imageUrl: 'http://brunch.io/images/others/gulp.png',
+        heading: 'Gulp will speed up your development workflow. It is amazing technology.',
+        description: 'Learn Gulp.',
+        title: 'Tutorial',
+        number: 14,
+      }
+    ]
+  };
+
+  var thumbnailList = React.createElement(ThumbnailList, options);
+  ReactDOM.render(thumbnailList, document.querySelector('.target'));
+</script>
