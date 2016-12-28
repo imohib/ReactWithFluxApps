@@ -1,2 +1,2 @@
 # ReactWithFluxApps
-A collection of apps incorporating concepts learns through a Udemy course.
+A collection of apps incorporating concepts learned through a Udemy course.
