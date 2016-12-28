@@ -7,7 +7,7 @@
     href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
     integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
     crossorigin="anonymous">
-  <!-- Enable this after including jQuery. 
+  <!-- Enable this after including jQuery.
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
     integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
     crossorigin="anonymous"></script>
@@ -22,10 +22,16 @@
   var Badge = React.createClass({
     render: function() {
       return <button className="btn btn-primary" type="button">
-        Messages <span className="badge">4</span>
+        {this.props.title} <span className="badge">{this.props.number}</span>
       </button>
     }
   });
-  var element = React.createElement(Badge);
-  ReactDOM.render(element, document.body);
+
+  var options = {
+    title: 'Inbox',
+    number: 11
+  };
+
+  var badge = React.createElement(Badge, options);
+  ReactDOM.render(badge, document.body);
 </script>
