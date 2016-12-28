@@ -1,0 +1,60 @@
+<head>
+  <link rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+  <link rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+    integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+    crossorigin="anonymous">
+  <!-- Enable this after including jQuery.
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+  -->
+  <script src="https://fb.me/react-0.14.3.js"></script>
+  <script src="https://fb.me/react-dom-0.14.3.js"></script>
+  <script src="https://fb.me/JSXTransformer-0.12.2.js"></script>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-5 target"></div>
+    </div>
+  </div>
+</body>
+<script type="text/jsx">
+  var Badge = React.createClass({
+    render: function() {
+      return <button className="btn btn-primary" type="button">
+        {this.props.title} <span className="badge">{this.props.number}</span>
+      </button>
+    }
+  });
+
+  var Thumbnail = React.createClass({
+    render: function() {
+      return <div className="thumbnail">
+        <img src={this.props.imageUrl} alt="react logo" />
+          <div className="caption">
+            <h3>{this.props.heading}</h3>
+            <p>{this.props.description}</p>
+            <p>
+              <Badge title={this.props.title} number={this.props.number} />
+            </p>
+          </div>
+      </div>
+    }
+  });
+
+  var options = {
+    imageUrl: 'http://formatjs.io/img/react.svg',
+    heading: 'Learn you React for greater good!',
+    description: 'Learn ReactJS with Flux. It is amazing technology.',
+    title: 'Tutorial',
+    number: 78,
+  };
+
+  var thumbnail = React.createElement(Thumbnail, options);
+  ReactDOM.render(thumbnail, document.querySelector('.target'));
+</script>
