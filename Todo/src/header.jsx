@@ -1,4 +1,5 @@
 var React = require('react');
+var Firebase = require('firebase');
 
 module.exports = React.createClass({
   getInitialState: function() {
@@ -6,7 +7,11 @@ module.exports = React.createClass({
   },
   handleClickAdd: function() {
     //Push data to Firebase.
-    console.log(this.state.text);
+    this.props.itemStore.push({
+      item: this.state.text,
+      done: false
+    });
+    this.setState({text: ""});
   },
   handleTextChange: function(event) {
     this.setState({
