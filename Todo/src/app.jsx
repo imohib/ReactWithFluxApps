@@ -27,7 +27,7 @@ var TodoPanel = React.createClass({
         <Header itemStore={this.firebaseRefs.items}/>
       </div>
       <hr />
-      <List records={this.state.items}/>
+      <List records={this.state.items} />
     </div>
   }
 });

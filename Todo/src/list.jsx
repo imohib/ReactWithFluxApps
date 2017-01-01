@@ -11,11 +11,15 @@ module.exports = React.createClass({
       for(var recordId in this.props.records) {
         var record = this.props.records[recordId];
         record.id = recordId;
-        list.push(<ListItem record={record} key={recordId}/>);
+        list.push(
+          <ListItem
+          record={record}
+          key={recordId} />
+        );
       }
-      return <ul className={"content " + (this.props.records ? "loaded" : "")}>
+      return <div className={"content " + (this.props.records ? "loaded" : "")}>
         {list}
-      </ul>
+      </div>
     }
   },
 
