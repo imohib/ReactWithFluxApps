@@ -1,6 +1,9 @@
 var React = require('react');
 var Header = require('./header');
 var Reactfire = require('reactfire');
+var Firebase = require('firebase');
+
+var List = require('./list');
 var rootURL =  "https://react-507a4.firebaseio.com/";
 
 var TodoPanel = React.createClass({
@@ -9,6 +12,10 @@ var TodoPanel = React.createClass({
   componentWillMount: function() {
     this.fb = new Firebase(rootURL + "items/");
     this.bindAsObject(this.fb, "items");
+  },
+
+  getInitialState: function() {
+    return {items: {}};
   },
 
   render: function(){
@@ -20,6 +27,7 @@ var TodoPanel = React.createClass({
         <Header itemStore={this.firebaseRefs.items}/>
       </div>
       <hr />
+      <List records={this.state.items}/>
     </div>
   }
 });

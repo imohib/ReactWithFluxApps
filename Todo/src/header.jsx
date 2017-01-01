@@ -1,5 +1,4 @@
 var React = require('react');
-var Firebase = require('firebase');
 
 module.exports = React.createClass({
   getInitialState: function() {
