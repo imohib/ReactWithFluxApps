@@ -10,7 +10,8 @@ module.exports = React.createClass({
   getInitialState: function() {
     return {
       text: this.props.record.item,
-      done: this.props.record.done
+      done: this.props.record.done,
+      textChanged: false,
     }
   },
 
@@ -19,6 +20,43 @@ module.exports = React.createClass({
     this.setState({done: complete});
     //Push data to Firebase.
     this.fb.update({done: complete});
+  },
+
+  handleTextChange: function(event) {
+    this.setState({
+      text: event.target.value,
+      textChanged: true
+    });
+  },
+
+  handleClickUndo: function() {
+    this.setState({
+      text: this.props.record.item,
+      textChanged: false
+    });
+  },
+
+  handleClickUpdate: function() {
+    //Push data to Firebase.
+    this.fb.update({item: this.state.text});
+    this.setState({textChanged: false});
+  },
+
+  changeButtons: function() {
+    if(this.state.textChanged) {
+      return <span className="input-group-btn">
+        <button className="btn btn-default"
+           type="button"
+           onClick={this.handleClickUpdate}>
+           Update
+        </button>
+        <button className="btn btn-default"
+           type="button"
+           onClick={this.handleClickUndo}>
+           Undo
+        </button>
+      </span>
+    }
   },
 
   render: function(){
@@ -32,7 +70,9 @@ module.exports = React.createClass({
           </span>
           <input type="text"
             value={this.state.text}
+            onChange={this.handleTextChange}
             className="form-control" />
+          {this.changeButtons()}
         </div>
       </div>
     </div>
