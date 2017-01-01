@@ -42,6 +42,11 @@ module.exports = React.createClass({
     this.setState({textChanged: false});
   },
 
+  handleClickDelete: function() {
+    //Push data to Firebase.
+    this.fb.remove();
+  },
+
   changeButtons: function() {
     if(this.state.textChanged) {
       return <span className="input-group-btn">
@@ -54,6 +59,18 @@ module.exports = React.createClass({
            type="button"
            onClick={this.handleClickUndo}>
            Undo
+        </button>
+      </span>
+    }
+  },
+
+  deleteButton: function() {
+    if(this.state.done === true) {
+      return <span className="input-group-btn">
+        <button className="btn btn-default"
+          type="button"
+          onClick={this.handleClickDelete}>
+          Delete
         </button>
       </span>
     }
@@ -73,6 +90,7 @@ module.exports = React.createClass({
             onChange={this.handleTextChange}
             className="form-control" />
           {this.changeButtons()}
+          {this.deleteButton()}
         </div>
       </div>
     </div>
