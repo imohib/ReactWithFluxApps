@@ -1,36 +1,65 @@
 var React = require('react');
-var Header = require('./header');
-var Reactfire = require('reactfire');
+var ReactFire = require('reactfire');
 var Firebase = require('firebase');
-
+var Header = require('./header');
 var List = require('./list');
-var rootURL =  "https://react-507a4.firebaseio.com/";
+var rootUrl = 'https://react-507a4.firebaseio.com/';
 
-var TodoPanel = React.createClass({
-  mixins: [Reactfire],
-
-  componentWillMount: function() {
-    this.fb = new Firebase(rootURL + "items/");
-    this.bindAsObject(this.fb, "items");
-  },
-
+var App = React.createClass({
+  mixins: [ ReactFire ],
   getInitialState: function() {
-    return {items: {}};
+    return {
+      items: {},
+      loaded: false
+    }
   },
-
-  render: function(){
+  componentWillMount: function() {
+    this.fb = new Firebase(rootUrl + 'items/');
+    this.bindAsObject(this.fb, 'items');
+    this.fb.on('value', this.handleDataLoaded);
+  },
+  render: function() {
     return <div className="panel panel-default">
-      <div className="panel-heading">
-        <h3 className="panel-title text-center">TODO List</h3>
+      <div className="text-center panel-heading">
+        <h3 className="panel-title">To-Do List</h3>
       </div>
       <div className="panel-body">
-        <Header itemStore={this.firebaseRefs.items}/>
+        <Header itemsStore={this.firebaseRefs.items} />
+        <hr />
+        <div className={"content " + (this.state.loaded ? 'loaded' : '')}>
+          <List items={this.state.items} />
+          {this.deleteButton()}
+        </div>
       </div>
-      <hr />
-      <List records={this.state.items} />
     </div>
+  },
+  deleteButton: function() {
+    if(!this.state.loaded) {
+      return
+    } else {
+      return <div className="text-center clear-complete">
+        <hr />
+        <button
+          type="button"
+          onClick={this.onDeleteDoneClick}
+          className="btn btn-danger">
+          Clear Completed Items
+        </button>
+      </div>
+    }
+  },
+
+  onDeleteDoneClick: function() {
+    for(var key in this.state.items) {
+      if(this.state.items[key].done === true) {
+        this.fb.child(key).remove();
+      }
+    }
+  },
+  handleDataLoaded: function(){
+    this.setState({loaded: true});
   }
 });
 
-var component = React.createElement(TodoPanel, {});
-React.render(component, document.querySelector('.container'));
+var element = React.createElement(App, {});
+React.render(element, document.querySelector('.container'));

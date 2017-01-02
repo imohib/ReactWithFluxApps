@@ -1,98 +1,95 @@
 var React = require('react');
-var rootURL =  "https://react-507a4.firebaseio.com/";
+var Firebase = require('firebase');
+var rootUrl = 'https://react-507a4.firebaseio.com/';
 
 module.exports = React.createClass({
-
-  componentWillMount: function() {
-    this.fb = new Firebase(rootURL + "items/" + this.props.record.id);
-  },
-
   getInitialState: function() {
     return {
-      text: this.props.record.item,
-      done: this.props.record.done,
-      textChanged: false,
-    }
-  },
-
-  handleClick: function() {
-    var complete = !this.state.done;
-    this.setState({done: complete});
-    //Push data to Firebase.
-    this.fb.update({done: complete});
-  },
-
-  handleTextChange: function(event) {
-    this.setState({
-      text: event.target.value,
-      textChanged: true
-    });
-  },
-
-  handleClickUndo: function() {
-    this.setState({
-      text: this.props.record.item,
+      text: this.props.item.text,
+      done: this.props.item.done,
       textChanged: false
-    });
-  },
-
-  handleClickUpdate: function() {
-    //Push data to Firebase.
-    this.fb.update({item: this.state.text});
-    this.setState({textChanged: false});
-  },
-
-  handleClickDelete: function() {
-    //Push data to Firebase.
-    this.fb.remove();
-  },
-
-  changeButtons: function() {
-    if(this.state.textChanged) {
-      return <span className="input-group-btn">
-        <button className="btn btn-default"
-           type="button"
-           onClick={this.handleClickUpdate}>
-           Update
-        </button>
-        <button className="btn btn-default"
-           type="button"
-           onClick={this.handleClickUndo}>
-           Undo
-        </button>
-      </span>
     }
   },
-
-  deleteButton: function() {
-    if(this.state.done === true) {
-      return <span className="input-group-btn">
-        <button className="btn btn-default"
-          type="button"
-          onClick={this.handleClickDelete}>
+  componentWillMount: function() {
+    this.fb = new Firebase(rootUrl + 'items/' + this.props.item.key);
+  },
+  render: function() {
+    return <div className="input-group">
+      <span className="input-group-addon">
+        <input
+          type="checkbox"
+          checked={this.state.done}
+          onChange={this.handleDoneChange}
+          />
+      </span>
+      <input type="text"
+        disabled={this.state.done}
+        className="form-control"
+        value={this.state.text}
+        onChange={this.handleTextChange}
+        />
+      <span className="input-group-btn">
+        {this.changesButtons()}
+        <button
+          className="btn btn-danger"
+          onClick={this.handleDeleteClick}
+          >
           Delete
         </button>
       </span>
+    </div>
+  },
+  changesButtons: function() {
+    if(!this.state.textChanged) {
+      return null
+    } else {
+      return [
+        <button
+          className="btn btn-warning"
+          onClick={this.handleSaveClick}
+          >
+          Save
+        </button>,
+        <button
+          onClick={this.handleUndoClick}
+          className="btn btn-primary"
+          >
+          Undo
+        </button>
+      ]
     }
   },
-
-  render: function(){
-    return <div className="row">
-      <div className="col-md-8">
-        <div className="input-group">
-          <span className="input-group-addon">
-            <input type="checkbox"
-              checked={this.state.done}
-              onChange={this.handleClick} />
-          </span>
-          <input type="text"
-            value={this.state.text}
-            onChange={this.handleTextChange}
-            className="form-control" />
-          {this.changeButtons()}
-          {this.deleteButton()}
-        </div>
-      </div>
-    </div>
+  handleSaveClick: function() {
+    this.fb.update({text: this.state.text});
+    this.setState({textChanged: false});
+  },
+  handleUndoClick: function() {
+    this.setState({
+      text: this.props.item.text,
+      textChanged: false
+    });
+  },
+  handleTextChange: function(event) {
+    if(event.target.value !== this.props.item.text)
+    {
+      this.setState({
+        text: event.target.value,
+        textChanged: true
+      });
+    }
+    else {
+      this.setState({
+        text: this.props.item.text,
+        textChanged: false
+      });
+    }
+  },
+  handleDoneChange: function(event) {
+    var update = {done: event.target.checked}
+    this.setState(update);
+    this.fb.update(update);
+  },
+  handleDeleteClick: function() {
+    this.fb.remove();
   }
 });
