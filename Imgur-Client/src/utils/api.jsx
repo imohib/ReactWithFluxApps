@@ -10,7 +10,7 @@ module.exports = window.api = {
       }
     })
     .then(function(response) {
-      return response.json()
+      return response.json();
     });
   }
 };
