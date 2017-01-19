@@ -1,17 +1,16 @@
 var React = require('react');
+var Reflux = require('reflux');
 var TopicStore = require('../stores/topic-store');
 
 module.exports = React.createClass({
+  mixins: [Reflux.listenTo(TopicStore, 'handleDataChange')],
+
   getInitialState: function() {
     return {topics: []}
   },
 
   componentWillMount: function() {
-    TopicStore.getTopics()
-      .then(function() {
-        //console.log(TopicStore.topics);
-        this.setState({topics: TopicStore.topics});
-      }.bind(this));
+    TopicStore.getTopics();
   },
 
   render: function() {
@@ -24,8 +23,13 @@ module.exports = React.createClass({
   renderTopics: function() {
     return this.state.topics.map(function(topic){
       return <li>
-        {topic.name}
+        {topic.name + ' (' + topic.description + ')'}
       </li>
     });
+  },
+
+  handleDataChange: function(eventName, changedData) {
+    //console.log(changedData);
+    this.setState({topics: changedData});
   }
 })
