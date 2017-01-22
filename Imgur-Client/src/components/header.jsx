@@ -1,37 +1,21 @@
-var Actions = require('../actions');
 var React = require('react');
-var Reflux = require('reflux');
 var ReactRouter = require('react-router');
-var TopicStore = require('../stores/topic-store');
 var Link = ReactRouter.Link;
+var TopicListMixin = require('./topic-list-mixin');
 
 module.exports = React.createClass({
-  mixins: [Reflux.listenTo(TopicStore, 'handleDataChange')],
-
-  getInitialState: function() {
-    return {topics: []}
-  },
-
-  componentWillMount: function() {
-    Actions.getTopics();
-  },
-
-  handleDataChange: function(eventName, changedData) {
-    //console.log(changedData);
-    this.setState({topics: changedData});
-  },
-
+  mixins: [TopicListMixin],
   renderTopics: function() {
     return this.state.topics.slice(0, 4).map(function(topic){
       return <li key={topic.id}>
         <Link
+          activeClassName="active"
           to={"topics/" + topic.id}>
           {topic.name}
         </Link>
       </li>
     });
   },
-
   render: function() {
     return <div className="red">
       <nav className="navbar navbar-default header">
