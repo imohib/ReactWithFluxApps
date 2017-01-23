@@ -1,19 +1,28 @@
 var React = require('react');
 var Actions = require('../actions');
 var Reflux = require('reflux');
-ImageStore = require('../stores/image-store');
+var ImageStore = require('../stores/image-store');
+var CommentBox = require('./comment-box');
+var CommentStore = require('../stores/comments-store');
 
 module.exports = React.createClass({
-  mixins: [Reflux.listenTo(ImageStore, 'handleDataChange')],
+  mixins: [
+    Reflux.listenTo(ImageStore, 'handleDataChange'),
+    Reflux.listenTo(CommentStore, 'handleDataChange')
+  ],
   getInitialState: function() {
-    return {image: null}
+    return {
+      image: null,
+      comments: []
+    }
   },
   componentWillMount: function() {
-    Actions.getImage(this.props.params.id)
+    Actions.getImage(this.props.params.id);
   },
   handleDataChange: function(eventName, changedData) {
     this.setState({
-      image: ImageStore.find(this.props.params.id)
+      image: ImageStore.find(this.props.params.id),
+      comments: CommentStore.comments
     });
   },
   renderImageDetail: function() {
@@ -27,6 +36,8 @@ module.exports = React.createClass({
       <div className="panel-footer">
         <h5>{this.state.image.description}</h5>
       </div>
+      <h3>Comments</h3>
+      {this.renderComments()}
     </div>
   },
   renderImage: function() {
@@ -45,8 +56,14 @@ module.exports = React.createClass({
     </video>
   },
   render: function() {
-    return <div>
+    return <div className="image-detail">
       {this.state.image ? this.renderImageDetail() : null}
     </div>
+  },
+  renderComments: function() {
+    if(!this.state.comments) {
+      return null;
+    }
+    return <CommentBox comments={this.state.comments} />
   }
 });

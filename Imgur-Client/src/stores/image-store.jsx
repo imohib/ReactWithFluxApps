@@ -17,11 +17,12 @@ module.exports = Reflux.createStore({
   getImage: function(imageID) {
     return Api.get('gallery/image/' + imageID)
       .then(function(response) {
+        var image = response.data;
         if(this.images) {
-          this.images.push(response.json);
+          this.images.push(image);
         }
         else {
-          this.images = [response.json];
+          this.images = [image];
         }
         this.triggerChange();
       }.bind(this));
